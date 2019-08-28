@@ -56,7 +56,7 @@ class ReduceLayer(nn.Module):
         self.fc = nn.Linear(in_feats, out_feats)
     
     def forward(self, nodes):
-        h = torch.cat((nodes.mailbox['m'], nodes.data['h'].unsqueeze(1)), dim = 1)       # can be verified
+        h = torch.cat((nodes.mailbox['m'], nodes.data['h'].unsqueeze(1)), dim = 1)       # mailbox size (batch * neighbors * feats), nodes.data['h'] size (batch * feats), so they need to be concatenated at dim 1.
         h = torch.mean(h, dim = 1)
         h = F.relu(self.fc(h))
         return {'h': h}
