@@ -23,13 +23,14 @@ custom message passing functions, default as follows.
 
 
 # Standard
-# need assgin degree features to nodes first: g.ndata['deg'] = g.out_degrees(g.nodes()).float()
+# need assgin degree features to nodes first: g.ndata['deg'] = g.out_of_degrees(g.nodes()).float()
 
 def message_func(edges):
-    return {'m': (1 / (np.sqrt(edges.src['deg']) * np.sqrt(edges.dst['deg']))) * edges.src['h']}
+    #print(edges.src['h'].size())
+    return {'m': (1 / (np.sqrt(edges.src['deg']) * np.sqrt(edges.dst['deg']))).view(-1,1) * edges.src['h']}
 
 def reduce_func(nodes):
-    msgs = torch.cat((nodes.mailbox['h'], nodes.data['h'].unsqueeze(1)), dim = 1)       # can be verified
+    msgs = torch.cat((nodes.mailbox['m'], nodes.data['h'].unsqueeze(1)), dim = 1)       # can be verified
     msgs = torch.mean(msgs, dim = 1)
     return {'h': msgs}
 
@@ -55,7 +56,7 @@ class ReduceLayer(nn.Module):
         self.fc = nn.Linear(in_feats, out_feats)
     
     def forward(self, nodes):
-        h = torch.cat((nodes.mailbox['h'], nodes.data['h'].unsqueeze(1)), dim = 1)       # can be verified
+        h = torch.cat((nodes.mailbox['m'], nodes.data['h'].unsqueeze(1)), dim = 1)       # can be verified
         h = torch.mean(h, dim = 1)
         h = F.relu(self.fc(h))
         return {'h': h}
