@@ -37,6 +37,7 @@ def reduce_func(nodes):
 
 '''
 linear transformation, can be written as a Node UDF, then call apply_nodes() to execute. Surely, it can combine with reduce_func. see ReduceLayer
+So similarly, operations for edge features can be written into the message_func which is formed as a class.  
 '''
 
 class NodeTransLayer(nn.Module):
