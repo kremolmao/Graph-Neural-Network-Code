@@ -23,7 +23,7 @@ custom message passing functions, default as follows.
 
 
 # Standard
-# need assgin degree features to nodes first: g.ndata['deg'] = g.out_of_degrees(g.nodes()).float()
+# need assgin degree features to nodes first: g.ndata['deg'] = g.out_degrees(g.nodes()).float()
 
 def message_func(edges):
     #print(edges.src['h'].size())
